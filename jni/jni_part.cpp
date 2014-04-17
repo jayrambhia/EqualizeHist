@@ -18,7 +18,7 @@ extern "C"
 		jint* _out = env->GetIntArrayElements(out, 0);
 
 		Mat mSrc(height, width, CV_8UC4, (unsigned char*)_in);
-		Mat bgra(height, width, CV_8UC4);
+		Mat bgra(height, width, CV_8UC4, (unsigned char*)_out);
 
 		vector<Mat> sChannels;
 		split(mSrc, sChannels);
@@ -29,15 +29,21 @@ extern "C"
 		}
 
 		merge(sChannels, bgra);
-
+		/*
 		for(int i=0; i<height; i++)
 		{
 			memcpy(&(_out[i*width]), &(bgra.data[i*bgra.step]), width*bgra.channels());
-		}
+		}*/
 
 		jint retVal;
 		int ret = 1;
 		retVal = jint(retVal);
+
+		env->ReleaseIntArrayElements(in, _in, 0);
+		env->ReleaseIntArrayElements(out, _out, 0);
+
 		return retVal;
+
+
 	}
 }
